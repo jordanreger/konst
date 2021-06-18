@@ -212,7 +212,7 @@ class Lander extends LitElement {
     e.preventDefault();
 
     let functions;
-    fetch("https://raw.githubusercontent.com/jordanreger/konst/main/functions.json").then(response => { return response.json() }).then(data => {
+    fetch("https://raw.githubusercontent.com/jordanreger/konst/main/functions.json").then(response => { return response.text() }).then(data => {
       functions = data;
       console.log(functions);
     });
