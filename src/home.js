@@ -39,16 +39,41 @@ class Lander extends LitElement {
       }
 
       @media only screen and (max-width: 600px) {
+        .page {
+          width: 90%;
+          height: 90%;
+          top: 52.5%;
+        }
+
+        #username {
+          font-size: 3vw;
+        }
+
+        input[type="text"] {
+          font-size: 4vw;
+        }
       }
 
       @media only screen and (min-width: 600px) {
+        .page {
+          width: 50%;
+          height: 50%;
+          top: 50%;
+        }
+
+        #username {
+          font-size: 1.25vw;
+        }
+
+        input[type="text"] {
+          font-size: 1.25vw;
+        }
       }
 
       /* page css */
       .page {
         position: absolute;
         left: 50%;
-        top: 50%;
         transform: translate(-50%, -50%);
         display: grid;
         grid-template-columns: 1fr;
@@ -57,8 +82,6 @@ class Lander extends LitElement {
         grid-template-areas:
           "top"
           "command-line";
-        width: 50%;
-        height: 50%;
       }
 
       .top {
@@ -134,7 +157,6 @@ class Lander extends LitElement {
 
       #username {
         color: #424242;
-        font-size: 1.25vw;
         position: inherit;
         right: 0;
         top: 0;
@@ -158,7 +180,6 @@ class Lander extends LitElement {
         left: 50%;
         transform: translate(-50%, -50%);
         width: calc(100% - 2vw);
-        font-size: 1vw;
         outline: none;
         color: #696969;
         padding-left: 1vw;
