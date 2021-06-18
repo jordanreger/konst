@@ -6,7 +6,7 @@ class App extends LitElement {
     return html`
       <latt-router>
         <latt-route path="/">
-          spelatt
+          <app-lander />
         </latt-route>
         <latt-catch to="/" />
       </latt-router>
