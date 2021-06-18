@@ -91,10 +91,6 @@ class Lander extends LitElement {
         border-radius: 10px;
         border: 3px solid #888;
         transition: 150ms background-color ease-in-out, 150ms border ease-in-out, 150ms color ease-in-out;
-        overflow-y: scroll;
-        overflow-x: scroll;
-        -ms-overflow-style: none;
-        scrollbar-width: none;
       }
 
       .terminal:hover {
@@ -109,11 +105,20 @@ class Lander extends LitElement {
       ul {
         position: absolute;
         left: 1vw;
+        margin-top: 2vh;
         bottom: 0vh;
         right: 1vw;
         padding: 0;
         list-style-position: outside;
         list-style-type: none;
+        max-height: calc(100% - 2vh);
+        overflow-y: scroll;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      li:first-child) {
+        padding-top: 1vh;
       }
 
       li:not(:last-child) {
@@ -196,11 +201,72 @@ class Lander extends LitElement {
       }
     }
 
+    //imported mods
+
+    for(var i = 0; i < localStorage.length; i++){
+      if(Object.keys(localStorage)[i] !== "username"){
+        let mod = JSON.parse(localStorage[Object.keys(localStorage)[i]]);
+        if(value.includes(mod.name)){
+          if(value === mod.name){
+            value = mod.function;
+          }
+        }
+      }
+    }
+
     if(value.includes("echo")){
       var li = document.createElement("li");
-      li.appendChild(document.createTextNode(`${value.split("echo ").pop()}`));
+      li.appendChild(document.createTextNode(`spelatt> ${value.split("echo ").pop()}`));
       list.appendChild(li);
+      list.scrollTop = list.scrollHeight;
       form.reset();
+    }
+
+    if(value.includes("clear")){
+      if(value === "clear"){
+        list.innerHTML = "";
+        form.reset();
+      }
+    }
+
+    if(value.includes("import")){
+      if(value.split("import ").pop() !== ""){
+        var url = value.split("import ").pop();
+        var response = fetch(url).then(response => { if(response.url !== `${window.location.href}${url}`){ return response.text() } else { return `cannot import from ${url}` } }).then(data => {
+          var li = document.createElement("li");
+          if(data !== `cannot import from ${url}`){
+            var data = JSON.parse(data);
+            localStorage.setItem(`${data.name}`, JSON.stringify(data));
+            // add localStorage check for mod
+            li.appendChild(document.createTextNode(`spelatt> imported "${data.name}"`));
+          } else {
+            li.appendChild(document.createTextNode(`spelatt> error: ${data}`));
+          }
+          list.appendChild(li);
+          list.scrollTop = list.scrollHeight;
+        });
+        form.reset();
+      }
+    }
+
+    if(value.includes("uninstall")){
+      if(value.split("uninstall ").pop() !== ""){
+        var url = value.split("uninstall ").pop();
+        if(localStorage.getItem(`${url}`)){
+          localStorage.removeItem(`${url}`)
+          var li = document.createElement("li");
+          li.appendChild(document.createTextNode(`spelatt> uninstalled "${url}"`));
+          list.appendChild(li);
+          list.scrollTop = list.scrollHeight;
+          form.reset();
+        } else {
+          var li = document.createElement("li");
+          li.appendChild(document.createTextNode(`spelatt> can't find mod "${url}"`));
+          list.appendChild(li);
+          list.scrollTop = list.scrollHeight;
+          form.reset();
+        }
+      }
     }
 
     if(value.includes("username")){
@@ -208,6 +274,10 @@ class Lander extends LitElement {
         if(value.split("username:").pop() !== ""){
           this.username = value.split("username:").pop();
           localStorage.setItem("username", this.username);
+          var li = document.createElement("li");
+          li.appendChild(document.createTextNode(`spelatt> username set to ${this.username}`));
+          list.appendChild(li);
+          list.scrollTop = list.scrollHeight;
           form.reset();
         } else {
           // send err
@@ -216,6 +286,10 @@ class Lander extends LitElement {
         if(value.split("username ").pop() === "clear"){
           this.username = "user";
           localStorage.setItem("username", this.username);
+          var li = document.createElement("li");
+          li.appendChild(document.createTextNode(`spelatt> username cleared`));
+          list.appendChild(li);
+          list.scrollTop = list.scrollHeight;
           form.reset();
         }
       }
