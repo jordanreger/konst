@@ -210,8 +210,15 @@ class Lander extends LitElement {
 
   async handleCmd(e){
     e.preventDefault();
+
+    let functions;
+    fetch("https://raw.githubusercontent.com/jordanreger/konst/main/functions.json").then(response => { return response.json() }).then(data => {
+      functions = data;
+      console.log(functions);
+    });
+  }
     //console.log(this.shadowRoot);
-    let page = this.shadowRoot.childNodes[2].childNodes;
+    /*let page = this.shadowRoot.childNodes[2].childNodes;
     let username = page[1].childNodes[3].childNodes[1].childNodes[1].data;
     let list = page[1].childNodes[1].childNodes[1].childNodes[1];
     let value, form;
@@ -315,7 +322,7 @@ class Lander extends LitElement {
         }
       }
     }
-  }
+  }*/
 
   render() {
     if (window.location.pathname === "/") {
