@@ -213,8 +213,10 @@ class Lander extends LitElement {
 
     let functions;
     fetch("https://raw.githubusercontent.com/jordanreger/konst/main/functions.json").then(response => { return response.text() }).then(data => {
-      functions = data;
-      console.log(functions);
+      functions = JSON.parse(data);
+      for(var i = 0; i < functions.length; i++){
+        console.log(functions[i].name);
+      }
     });
   }
     //console.log(this.shadowRoot);

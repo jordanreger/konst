@@ -1,6 +1,8 @@
 [{
-  "test": "test"
+  "name": "username:[input]",
+  "function": "storage set username [input]"
 },
 {
-  "test": "test2"
+  "name": "echo",
+  "function": "log [input]"
 }]
