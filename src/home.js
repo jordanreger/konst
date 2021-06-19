@@ -230,6 +230,7 @@ class Lander extends LitElement {
 
     if(value.includes(",")){
       let cmds = value.split(", ");
+      //console.log(cmds.length);
       /*for(var i = 0; i < cmds.length; i++){
         console.log(cmds[i]);
       }*/
@@ -240,11 +241,12 @@ class Lander extends LitElement {
 
     if(value.includes("echo")){
       var li = document.createElement("li");
-      console.log(value);
-      li.appendChild(document.createTextNode(`konst.${localStorage.getItem("username") ? localStorage.getItem("username") : this.username}> ${value.trim().split("echo ").pop()}`));
-      list.appendChild(li);
-      list.scrollTop = list.scrollHeight;
-      form.reset();
+      if(!value.includes(",")){
+        li.appendChild(document.createTextNode(`konst.${localStorage.getItem("username") ? localStorage.getItem("username") : this.username}> ${value.trim().split("echo ").pop()}`));
+        list.appendChild(li);
+        list.scrollTop = list.scrollHeight;
+        form.reset();
+      }
     }
 
     else if(value.includes("clear")){
