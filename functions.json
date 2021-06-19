@@ -1,8 +1,0 @@
-[{
-  "name": "username:[input]",
-  "function": "storage set username [input]"
-},
-{
-  "name": "echo",
-  "function": "log [input]"
-}]
