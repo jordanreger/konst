@@ -46,10 +46,14 @@ class Lander extends LitElement {
         }
 
         #username {
-          font-size: 3vw;
+          font-size: 4vw;
         }
 
         input[type="text"] {
+          font-size: 4vw;
+        }
+
+        ul {
           font-size: 4vw;
         }
       }
@@ -57,7 +61,7 @@ class Lander extends LitElement {
       @media only screen and (min-width: 600px) {
         .page {
           width: 50%;
-          height: 50%;
+          height: 75%;
           top: 50%;
         }
 
@@ -68,57 +72,33 @@ class Lander extends LitElement {
         input[type="text"] {
           font-size: 1.25vw;
         }
+
+        ul {
+          font-size: 1.25vw;
+        }
       }
 
       /* page css */
       .page {
+        border-radius: 10px;
         position: absolute;
         left: 50%;
         transform: translate(-50%, -50%);
         display: grid;
+        grid-auto-rows: 1fr;
         grid-template-columns: 1fr;
-        grid-template-rows: 6fr 1.5fr;
-        gap: 2em 0px;
+        grid-template-rows: 15fr 1fr;
+        gap: 0px 0px;
         grid-template-areas:
-          "top"
+          "terminal"
           "command-line";
       }
 
-      .top {
-        grid-area: top;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        display: grid;
-        grid-template-columns: 4fr 1fr;
-        grid-template-rows: 1fr;
-        gap: 0px 2em;
-        grid-template-areas:
-          "left right";
-      }
-
-      .left {
-        grid-area: left;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        margin-left: -2.5px;
-      }
-
       .terminal {
+        grid-area: terminal;
         position: absolute;
-        width: calc(100% - 3px);
-        height: calc(100% - 3px);
-        border: 1px solid black;
-        background-color: #b4b4b4;
-        border-radius: 10px;
-        border: 3px solid #888;
-        transition: 150ms background-color ease-in-out, 150ms border ease-in-out, 150ms color ease-in-out;
-      }
-
-      .terminal:hover {
-        border: 3px solid #696969;
-        transition: 150ms background-color ease-in-out, 150ms border ease-in-out, 150ms color ease-in-out;
+        width: 100%;
+        height: 100%;
       }
 
       .terminal::-webkit-scrollbar {
@@ -127,7 +107,7 @@ class Lander extends LitElement {
 
       ul {
         position: absolute;
-        left: 1vw;
+        left: 0;
         margin-top: 2vh;
         bottom: 0vh;
         right: 1vw;
@@ -138,9 +118,10 @@ class Lander extends LitElement {
         overflow-y: scroll;
         -ms-overflow-style: none;
         scrollbar-width: none;
+        color: #c4c4c4;
       }
 
-      li:first-child) {
+      li:first-child {
         padding-top: 1vh;
       }
 
@@ -148,57 +129,34 @@ class Lander extends LitElement {
         padding-bottom: 1vh;
       }
 
-      .right {
-        grid-area: right;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-      }
-
-      #username {
-        color: #424242;
-        position: inherit;
-        right: 0;
-        top: 0;
-        user-select: none;
-      }
-
       .command-line {
         grid-area: command-line;
         position: absolute;
         width: 100%;
         height: 100%;
+        display: grid;
+        grid-template-columns: min-content auto;
+      }
+
+      #username {
+        position: relative;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #c4c4c4;
       }
 
       input[type="text"] {
+        position: relative;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
         font-family: IBM Plex Mono;
         background-color: transparent;
-        border: 3px solid #888;
-        border-radius: 10px;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: calc(100% - 2vw);
         outline: none;
-        color: #696969;
-        padding-left: 1vw;
-        padding-right: 1vw;
-        padding-top: 2vh;
-        padding-bottom: 2vh;
-        transition: 150ms background-color ease-in-out, 150ms border ease-in-out, 150ms color ease-in-out;
-      }
-
-      input[type="text"]:hover {
-        border: 3px solid #696969;
-        transition: 150ms background-color ease-in-out, 150ms border ease-in-out, 150ms color ease-in-out;
-      }
-
-      input[type="text"]:focus {
-        border: 3px solid #696969;
-        background-color: #b4b4b4;
-        color: #424242;
-        transition: 150ms background-color ease-in-out, 150ms border ease-in-out, 150ms color ease-in-out;
+        border: none;
+        color: #c4c4c4;
+        margin-left: 0.5vw;
       }
     `;
   }
@@ -214,19 +172,28 @@ class Lander extends LitElement {
     }
     //console.log(this.shadowRoot);
     let page = this.shadowRoot.childNodes[2].childNodes;
-    let username = page[1].childNodes[3].childNodes[1].childNodes[1].data;
-    let list = page[1].childNodes[1].childNodes[1].childNodes[1];
+    let list = page[1].childNodes[1];
     let value, form;
     for(var i = 0; i < page.length; i++){
       if(page[i].className === "command-line"){
-        form = page[i].childNodes[1];
+        form = page[i];
         if(val === undefined){
-          value = page[i].childNodes[1].childNodes[1].value;
+          value = page[i].childNodes[3].childNodes[0].value;
         } else {
           value = val;
         }
       }
     }
+
+    var br = document.createElement("br");
+    list.appendChild(br);
+    list.scrollTop = list.scrollHeight;
+
+    var cmd = document.createElement("li");
+    cmd.appendChild(document.createTextNode(`konst.${localStorage.getItem("username") ? localStorage.getItem("username") : this.username}> ${value}`));
+    list.appendChild(cmd);
+    //var br = document.createElement("br");
+    //list.appendChild(br);
 
     if(value.includes(",")){
       let cmds = value.split(", ");
@@ -242,7 +209,7 @@ class Lander extends LitElement {
     if(value.includes("echo")){
       var li = document.createElement("li");
       if(!value.includes(",")){
-        li.appendChild(document.createTextNode(`konst.${localStorage.getItem("username") ? localStorage.getItem("username") : this.username}> ${value.trim().split("echo ").pop()}`));
+        li.appendChild(document.createTextNode(`${value.trim().split("echo ").pop()}`));
         list.appendChild(li);
         list.scrollTop = list.scrollHeight;
         form.reset();
@@ -256,7 +223,7 @@ class Lander extends LitElement {
       }
     }
 
-    else if(value.includes("import")){
+    /*else if(value.includes("import")){
       if(value.split("import ").pop() !== ""){
         var url = value.split("import ").pop();
         var response = fetch(url).then(response => { if(response.url !== `${window.location.href}${url}`){ return response.text() } else { return `cannot import from ${url}` } }).then(data => {
@@ -279,13 +246,13 @@ class Lander extends LitElement {
       }
     }
 
-    /*else if(value.includes("install")){
+    else if(value.includes("install")){
       var li = document.createElement("li");
       li.appendChild(document.createTextNode(`konst.${localStorage.getItem("username") ? localStorage.getItem("username") : this.username}> please use the command "import"`));
       list.appendChild(li);
       list.scrollTop = list.scrollHeight;
       form.reset();
-    }*/
+    }
 
     else if(value.includes("eval")){
       var mod = value.split("eval ").pop();
@@ -331,12 +298,12 @@ class Lander extends LitElement {
           form.reset();
         }
       }
-    }
+    }*/
 
     else {
       if(value !== ""){
         var li = document.createElement("li");
-        li.appendChild(document.createTextNode(`konst.${localStorage.getItem("username") ? localStorage.getItem("username") : this.username}> no command "${value.split(" ")[0]}"`));
+        li.appendChild(document.createTextNode(`no command "${value.split(" ")[0]}"`));
         list.appendChild(li);
         list.scrollTop = list.scrollHeight;
         form.reset();
@@ -374,22 +341,16 @@ class Lander extends LitElement {
     if (window.location.pathname === "/") {
       return html`
       <div class="page">
-        <div class="top">
-          <div class="left">
-            <div class="terminal">
-              <ul>
-              </ul>
-            </div>
-          </div>
-          <div class="right">
-            <div id="username">${localStorage.getItem("username") ? localStorage.getItem("username") : this.username}</div>
-          </div>
+        <div class="terminal">
+          <ul>
+          </ul>
         </div>
-        <div class="command-line">
-          <form @submit="${(e) => this.handleCmd(e)}">
-            <input type="text" placeholder="> command line" />
-          </form>
-        </div>
+        <form @submit="${(e) => this.handleCmd(e)}" class="command-line">
+          <div class="username">
+            <div id="username">konst.${localStorage.getItem("username") ? localStorage.getItem("username") : this.username}></div>
+          </div>
+          <div class="input"><input type="text" /></div>
+        </form>
       </div>
     `;
     } else {
