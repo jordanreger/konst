@@ -36,6 +36,7 @@ class Lander extends LitElement {
       a {
         color: inherit;
         text-decoration: none;
+        border-bottom: 2px solid #c4c4c4;
       }
 
       @media only screen and (max-width: 600px) {
@@ -80,6 +81,7 @@ class Lander extends LitElement {
 
       /* page css */
       .page {
+        font-weight: 500;
         border-radius: 10px;
         position: absolute;
         left: 50%;
@@ -157,8 +159,22 @@ class Lander extends LitElement {
         border: none;
         color: #c4c4c4;
         margin-left: 0.5vw;
+        width: 100%;
+        font-weight: 500;
       }
     `;
+  }
+
+  firstUpdated(){
+    let page = this.shadowRoot.childNodes[2].childNodes;
+    let input;
+    for(var i = 0; i < page.length; i++){
+      if(page[i].className === "command-line"){
+        input = page[i].childNodes[3].childNodes[0];
+      }
+    }
+
+    input.focus();
   }
 
   constructor() {
@@ -195,18 +211,52 @@ class Lander extends LitElement {
     //var br = document.createElement("br");
     //list.appendChild(br);
 
-    if(value.includes(",")){
+    /*if(value.includes(",")){
       let cmds = value.split(", ");
       //console.log(cmds.length);
       /*for(var i = 0; i < cmds.length; i++){
         console.log(cmds[i]);
-      }*/
+      }
       for(var i = 0; i < cmds.length; ++i){
         this.handleCmd(undefined, cmds[i]);
       }
+    }*/
+
+    if(value.includes("help")){
+      var li = document.createElement("li");
+      if(!value.includes(",")){
+        li.appendChild(document.createTextNode(`ABOUT · displays information about konst`));
+        li.appendChild(br.cloneNode());
+        li.appendChild(document.createTextNode(`ECHO  · displays messages`));
+        li.appendChild(br.cloneNode());
+        li.appendChild(document.createTextNode(`CLEAR · clears the screen`));
+        li.appendChild(br.cloneNode());
+        li.appendChild(document.createTextNode(`HELP  · displays this message`));
+        list.appendChild(li);
+        list.scrollTop = list.scrollHeight;
+        form.reset();
+      }
     }
 
-    if(value.includes("echo")){
+    else if(value.includes("about")){
+      var li = document.createElement("li");
+      if(value === "about"){
+        li.appendChild(document.createTextNode(`KONST — a web-based console`));
+        li.appendChild(br.cloneNode());
+        li.appendChild(document.createTextNode(`built by `));
+        var link = document.createElement('a');
+        link.href = "https://majel.me";
+        link.innerText = "jordan reger";
+        li.appendChild(link);
+        li.appendChild(document.createTextNode(`, 2021`));
+
+        list.appendChild(li);
+        list.scrollTop = list.scrollHeight;
+        form.reset();
+      }
+    }
+
+    else if(value.includes("echo")){
       var li = document.createElement("li");
       if(!value.includes(",")){
         li.appendChild(document.createTextNode(`${value.trim().split("echo ").pop()}`));
