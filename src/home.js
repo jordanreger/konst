@@ -189,10 +189,11 @@ class Lander extends LitElement {
     //console.log(this.shadowRoot);
     let page = this.shadowRoot.childNodes[2].childNodes;
     let list = page[1].childNodes[1];
-    let value, form;
+    let value, form, username;
     for(var i = 0; i < page.length; i++){
       if(page[i].className === "command-line"){
         form = page[i];
+        username = page[i].childNodes[1].childNodes[1];
         if(val === undefined){
           value = page[i].childNodes[3].childNodes[0].value;
         } else {
@@ -201,74 +202,135 @@ class Lander extends LitElement {
       }
     }
 
+    value = value.split(" ");
+
     var br = document.createElement("br");
     list.appendChild(br);
     list.scrollTop = list.scrollHeight;
 
     var cmd = document.createElement("li");
-    cmd.appendChild(document.createTextNode(`konst.${localStorage.getItem("username") ? localStorage.getItem("username") : this.username}> ${value}`));
+    cmd.appendChild(document.createTextNode(`konst.${localStorage.getItem("username") ? localStorage.getItem("username") : this.username}> ${value.join(' ')}`));
     list.appendChild(cmd);
-    //var br = document.createElement("br");
-    //list.appendChild(br);
 
-    /*if(value.includes(",")){
-      let cmds = value.split(", ");
-      //console.log(cmds.length);
-      /*for(var i = 0; i < cmds.length; i++){
-        console.log(cmds[i]);
-      }
-      for(var i = 0; i < cmds.length; ++i){
-        this.handleCmd(undefined, cmds[i]);
-      }
-    }*/
-
-    if(value.includes("help")){
+    if(value[0] === "help"){
       var li = document.createElement("li");
-      if(!value.includes(",")){
-        li.appendChild(document.createTextNode(`ABOUT · displays information about konst`));
-        li.appendChild(br.cloneNode());
-        li.appendChild(document.createTextNode(`ECHO  · displays messages`));
-        li.appendChild(br.cloneNode());
-        li.appendChild(document.createTextNode(`CLEAR · clears the screen`));
-        li.appendChild(br.cloneNode());
-        li.appendChild(document.createTextNode(`HELP  · displays this message`));
+
+      if(value[1] === "about"){
+        li.appendChild(document.createTextNode(`not much here; it should explain itself pretty well...`));
+        //li.appendChild(br.cloneNode());
+        list.appendChild(li);
+        list.scrollTop = list.scrollHeight;
+        form.reset();
+      }
+
+      else if(value[1] === "clear"){
+        li.appendChild(document.createTextNode(`not much here; it should explain itself pretty well...`));
+        //li.appendChild(br.cloneNode());
+        list.appendChild(li);
+        list.scrollTop = list.scrollHeight;
+        form.reset();
+      }
+
+      else if(value[1] === "echo"){
+        li.appendChild(document.createTextNode(`not much here; it should explain itself pretty well...`));
+        //li.appendChild(br.cloneNode());
+        list.appendChild(li);
+        list.scrollTop = list.scrollHeight;
+        form.reset();
+      }
+
+      else if(value[1] === "settings"){
+        li.appendChild(document.createTextNode(`USERNAME {new username} · changes your username (konst.{new username})`));
+        //li.appendChild(br.cloneNode());
+        list.appendChild(li);
+        list.scrollTop = list.scrollHeight;
+        form.reset();
+      }
+
+      else {
+        if(value[1] !== undefined){
+          var li = document.createElement("li");
+          li.appendChild(document.createTextNode(`no command "${value[1]}"`));
+          list.appendChild(li);
+          list.scrollTop = list.scrollHeight;
+          form.reset();
+        } else {
+          li.appendChild(br.cloneNode());
+          li.appendChild(document.createTextNode(`GENERAL`));
+          li.appendChild(br.cloneNode());
+          li.appendChild(document.createTextNode(`ABOUT · displays information about konst`));
+          li.appendChild(br.cloneNode());
+          li.appendChild(document.createTextNode(`CLEAR    · clears the screen`));
+          li.appendChild(br.cloneNode());
+          li.appendChild(document.createTextNode(`ECHO     · displays messages`));
+          li.appendChild(br.cloneNode());
+          li.appendChild(document.createTextNode(`HELP     · displays this message`));
+          li.appendChild(br.cloneNode());
+          li.appendChild(document.createTextNode(`SETTINGS · displays settings messages`));
+          li.appendChild(br.cloneNode());
+          li.appendChild(br.cloneNode());
+          li.appendChild(document.createTextNode(`SPECIFIC COMMAND HELP`));
+          li.appendChild(br.cloneNode());
+          li.appendChild(document.createTextNode(`HELP {command} · displays settings for specific command (if applicable)`));
+          list.appendChild(li);
+          list.scrollTop = list.scrollHeight;
+          form.reset();
+        }
+      }
+    }
+
+    else if(value[0] === "about"){
+      var li = document.createElement("li");
+      li.appendChild(document.createTextNode(`KONST — a web-based console`));
+      li.appendChild(br.cloneNode());
+      li.appendChild(document.createTextNode(`built by `));
+      var link = document.createElement('a');
+      link.href = "https://majel.me";
+      link.innerText = "jordan reger";
+      li.appendChild(link);
+      li.appendChild(document.createTextNode(`, 2021`));
+
+      list.appendChild(li);
+      list.scrollTop = list.scrollHeight;
+      form.reset();
+    }
+
+    else if(value[0] === "clear"){
+      list.innerHTML = "";
+      form.reset();
+    }
+
+    else if(value[0] === "echo"){
+      var params = value.slice(1);
+      if(params[0] !== "" && params.length !== 0){
+        if(params.length !== 1){
+          params = params.join(" ");
+        } else {
+          params = params[0];
+        }
+        var li = document.createElement("li");
+        li.appendChild(document.createTextNode(`${params}`));
         list.appendChild(li);
         list.scrollTop = list.scrollHeight;
         form.reset();
       }
     }
 
-    else if(value.includes("about")){
+    else if(value[0] === "settings"){
+      var params = value.slice(1);
       var li = document.createElement("li");
-      if(value === "about"){
-        li.appendChild(document.createTextNode(`KONST — a web-based console`));
-        li.appendChild(br.cloneNode());
-        li.appendChild(document.createTextNode(`built by `));
-        var link = document.createElement('a');
-        link.href = "https://majel.me";
-        link.innerText = "jordan reger";
-        li.appendChild(link);
-        li.appendChild(document.createTextNode(`, 2021`));
-
+      if(params[0] === "username"){
+        localStorage.setItem("username", params[1]);
+        li.appendChild(document.createTextNode(`username set to "${params[1]}". please refresh to see the changes.`));
+        //li.appendChild(br.cloneNode());
         list.appendChild(li);
         list.scrollTop = list.scrollHeight;
         form.reset();
-      }
-    }
-
-    else if(value.includes("echo")){
-      var li = document.createElement("li");
-      if(!value.includes(",")){
-        li.appendChild(document.createTextNode(`${value.trim().split("echo ").pop()}`));
+      } else {
+        li.appendChild(document.createTextNode(`welcome to the settings lol`));
+        //li.appendChild(br.cloneNode());
         list.appendChild(li);
         list.scrollTop = list.scrollHeight;
-        form.reset();
-      }
-    }
-
-    else if(value.includes("clear")){
-      if(value === "clear"){
-        list.innerHTML = "";
         form.reset();
       }
     }
@@ -351,9 +413,9 @@ class Lander extends LitElement {
     }*/
 
     else {
-      if(value !== ""){
+      if(value[0] !== ""){
         var li = document.createElement("li");
-        li.appendChild(document.createTextNode(`no command "${value.split(" ")[0]}"`));
+        li.appendChild(document.createTextNode(`no command "${value[0]}"`));
         list.appendChild(li);
         list.scrollTop = list.scrollHeight;
         form.reset();
